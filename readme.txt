@@ -13,7 +13,7 @@ Asynchronous telegram bot that implements document management via Synology Drive
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠉⡹⠉⠉⠉⠉⢉⠇⢠⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠰⡉⠑⠁⢠⠃⠀⠀⣟⠓⠋⢠⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠈⠛⠒⠁⠀⠀⠀⠈⠓⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-dicbut ot docbot idk xdd
+dicbut or docbot idk xdd
 
 1. Copy docbot repository to python venv folder on yours Synology DSM.
 2. Edit config.ini and user.json (optional answers.json) as you need:
