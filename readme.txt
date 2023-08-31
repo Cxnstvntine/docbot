@@ -19,15 +19,16 @@ dicbut or docbot idk xdd
 2. Edit config.ini and user.json (optional answers.json) as you need:
     config.ini:
       [SYNOLOGY]
-      Folder = <path to folder to save files>
+      Folder = <path/to/folder/to/save/files>
       [TELEGRAM]
       Token = <yours tg bot token>
       APIServer = <api server, default: https://api.telegram.org>
-      isPrivate = <True/False, if private only users in users.json have acces to bot>
+      isPrivate = <True/False: if true only users in users.json have acces to bot>
     users.json:
       [usernames, that, are, allowed, to, use, bot]
-3. Run this script on yours Synology DSM in task scheduler:
-    cd /volume1/<path to python venv>/
-    source bin/activate
-    cd docbot/
-    python3 docbot.py
+3. Edit run.sh and kill.sh: change example path to path to yours python venv
+4. Add and run this script on yours Synology DSM in task scheduler to run docbot:
+    bash <path/to/python/venv>/docbot/run.sh
+5. Add and run this script on yours Synology DSM in task scheduler to kill docbot:
+    bash <path/to/python/venv>/docbot/kill.sh
+   
