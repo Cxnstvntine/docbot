@@ -1,12 +1,12 @@
 {
-    "greetings":"Приветствую!",
-    "unknown command":"Неизвестная команда.",
-    "no acces":"У вас нет доступа.",
-    "succes":"Документ успешно отправлен на сервер.",
-    "failed to open":"Не удалось открыть файл. Возможно он удален или перемещен.",
-    "something wrong":"Что-то пошло не так. Повторите попытку позже.",
-    "file not exist":"Документа c таким номером не существует.",
-    "id assigned":"Документу присвоен номер: ",
-    "request document":"Отправьте документ следующим сообщением.",
-    "request id":"Отправьте номер документа следующим сообщением."
+    "greetings":"Greetings!",
+    "unknown command":"Unknown command.",
+    "no acces":"Acces denied.",
+    "succes":"Document succesfuly uploaded.",
+    "failed to open":"Failed to open file. It can be deleted or moved.",
+    "something wrong":"Something went wrong. Try later.",
+    "file not exist":"Document does not exist. Wrong ID.",
+    "id assigned":"Document ID assigned: ",
+    "request document":"Send the document with the following message.",
+    "request id":"Send the document ID with the following message."
 }
