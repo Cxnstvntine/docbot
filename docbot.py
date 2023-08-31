@@ -3,10 +3,11 @@ import configparser
 import json
 import shutil
 import asyncio
+from datetime import datetime
 
 #load data from config file
 config = configparser.ConfigParser()
-config.read('./config.ini')
+config.read('./config.ini', encoding='utf-8')
 path =     str(config['SYNOLOGY']['Folder']).strip("'")
 token =    str(config['TELEGRAM']['Token']).strip("'")
 tapi =     str(config['TELEGRAM']['APIServer']).strip("'")
@@ -17,6 +18,43 @@ upload_q = list() #queue to get file
 download_q = dict() #queue to send file
 with open('./json/answers.json', 'r', encoding='utf-8') as input: #dictionary with text answers
     say = json.load(input)
+
+#returns ddmm string
+def getdate():
+    current = datetime.now()
+    day = current.day
+    month = current.month
+    if day < 10:
+        day = '0'+str(day)
+    else:
+        day = str(day)
+    if month < 10:
+        month = '0'+str(month)
+    else:
+        month = str(month)
+    date = day+month
+    return date
+
+#generates id: ddmm-index (the index is intraday)
+def createid():
+    index = 1
+    with open('./json/documents.json', 'r', encoding='utf-8') as input:
+        iddict = json.load(input)
+    input.close()
+    if len(iddict) != 0:
+        last_id = str(list(iddict.keys())[-1])
+        if last_id != '':
+                if last_id.partition('-')[0] == getdate():
+                    if iddict[last_id] == '':
+                        index = last_id.partition('-')[2]
+                    else:
+                        index = int(last_id.partition('-')[2])+1
+    id = getdate()+'-'+str(index)
+    iddict[id] = ''
+    with open('./json/documents.json', 'w', encoding='utf-8') as output:  
+        json.dump(iddict, output)
+    output.close()
+    return id
 
 #getting updates from Telegram Bot API
 async def getupdates(offset=0):
@@ -36,12 +74,13 @@ async def uploadfile(message):
 
     with open('./json/documents.json', 'r', encoding='utf-8') as input:
         iddict = json.load(input)
+    input.close()
     if inner_id in iddict:
         file_name = f'{iddict[inner_id]}'
         try:    #trying to open file
             document = open(f'{path}/{iddict[inner_id]}', 'rb')
         except IOError: #if failed to open file
-            text = say['file deleted']
+            text = say['failed to open']
             await send(text, chat_id)
         else:   #if file opened succesfuly
             with document:
@@ -66,10 +105,12 @@ async def downloadfile(file_id: str, file_name: str, chat_id: str):
             shutil.copyfileobj(response.raw, out_file)
         with open('./json/documents.json', 'r', encoding='utf-8') as input:
             iddict = json.load(input)
+        input.close()
         inner_id = download_q[chat_id]
         iddict[inner_id] = f'{file_name}'
         with open('./json/documents.json', 'w', encoding='utf-8') as output:    
             json.dump(iddict, output)
+        output.close()
         text = say['succes']
         await send(text, chat_id)    
     else:
@@ -81,6 +122,7 @@ def authentication(message):
     if private:
         with open('./json/users.json', 'r', encoding='utf-8') as input:
             users = json.load(input)
+        input.close()
         if message['from']['username'] in users:
             return True
         else:
@@ -93,11 +135,7 @@ async def commandhandler(message):
     chat_id = message['chat']['id']
     #put user in queue to send file
     if message['text'] == '/newdoc':
-        with open('./json/documents.json', 'r', encoding='utf-8') as input:
-            iddict = json.load(input)
-        inner_id = len(iddict)
-        with open('./json/documents.json', 'w', encoding='utf-8') as output:    
-            json.dump(iddict, output)
+        inner_id = createid()
         text = say['id assigned']+f'{str(inner_id)}\n'+say['request document']
         await send(text, chat_id)
         global download_q
